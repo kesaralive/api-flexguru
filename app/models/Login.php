@@ -25,4 +25,13 @@ class Login
             return false;
         }
     }
+
+    public function userid($username)
+    {
+        $this->db->query('SELECT userid FROM `api`.`user` WHERE `user`.`username` = :username');
+        $this->db->bind(':username', $username);
+        $this->db->execute();
+        $res = $this->db->resultSet();
+        return $res[0]['userid'];
+    }
 }
