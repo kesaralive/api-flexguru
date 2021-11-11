@@ -110,12 +110,36 @@ class Database
         }
     }
 
+    //Find user by username
+    public function findUserByid($userid)
+    {
+        //prepared statement
+        $this->query("SELECT * FROM `api`.`user` WHERE `userid` = :userid");
+        $this->bind(':userid', $userid);
+        $this->execute();
+        return $this->resultSet();
+    }
+
     //Find user by mobile
     public function findUserByMobile($phoneno)
     {
         //prepared statement
         $this->query("SELECT * FROM `api`.`user` WHERE `phoneno` = :phoneno");
         $this->bind(':phoneno', $phoneno);
+        $this->execute();
+        if ($this->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //Exists ?
+    public function exists($table, $column, $data)
+    {
+        //prepared statement
+        $this->query("SELECT * FROM `api`." . $table . " WHERE " . $column . " = :data");
+        $this->bind(':data', $data);
         $this->execute();
         if ($this->rowCount() > 0) {
             return true;

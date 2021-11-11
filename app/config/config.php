@@ -14,3 +14,6 @@ define('URLROOT', 'http://localhost/flexguru');
 
 //Sitename
 define('SITENAME', 'Api-Flexguru');
+
+//Secret key
+define('SECRET_KEY', 'Abc123');
