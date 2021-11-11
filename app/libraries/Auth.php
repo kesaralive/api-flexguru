@@ -1,5 +1,5 @@
 <?php
-require $_SERVER['DOCUMENT_ROOT'] . '/vendor/autoload.php';
+require $_SERVER['DOCUMENT_ROOT'] . '/api-flexguru/app/vendor/autoload.php';
 
 use \Firebase\JWT\JWT;
 use \Firebase\JWT\Key;
@@ -19,12 +19,16 @@ class Auth
         $iat = time();
         $exp = time() + 60 * 60;
         $payload = array(
-            'iss' => 'http://localhost/api-flexguru', //issuer
-            'aud' => 'http://localhost/flexguru', //audience
+            'iss' => 'localhost', //issuer
+            'aud' => 'localhost', //audience
             'iat' => $iat, //time JWT was issued
             'exp' => $exp //time JWT expires
         );
         $jwt = JWT::encode($payload, $this->key, 'HS512');
+        return array(
+            'token' => $jwt,
+            'expires' => $exp
+        );
     }
 
     //Basic auth for private area

@@ -12,6 +12,7 @@ class Users extends Controller
         $user = $this->model("User");
         $auth = new Auth;
         $auth->private();
+        print_r($auth->auth());
         if ($result = $user->read()) {
             $users_arr = array();
             $users_arr['data'] = array();

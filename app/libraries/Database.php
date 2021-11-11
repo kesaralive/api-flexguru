@@ -123,4 +123,18 @@ class Database
             return false;
         }
     }
+
+    //Exists ?
+    public function exists($table, $column, $data)
+    {
+        //prepared statement
+        $this->query("SELECT * FROM `api`." . $table . " WHERE " . $column . " = :data");
+        $this->bind(':data', $data);
+        $this->execute();
+        if ($this->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
