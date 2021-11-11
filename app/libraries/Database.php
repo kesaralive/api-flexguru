@@ -110,6 +110,16 @@ class Database
         }
     }
 
+    //Find user by username
+    public function findUserByid($userid)
+    {
+        //prepared statement
+        $this->query("SELECT * FROM `api`.`user` WHERE `userid` = :userid");
+        $this->bind(':userid', $userid);
+        $this->execute();
+        return $this->resultSet();
+    }
+
     //Find user by mobile
     public function findUserByMobile($phoneno)
     {
