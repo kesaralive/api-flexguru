@@ -1,14 +1,11 @@
-<html lang="en">
+<?php
+//Require libraries from folder libraries
+require_once 'libraries/Core.php';
+require_once 'libraries/Controller.php';
+require_once 'libraries/Database.php';
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>flexguru api</title>
-</head>
+//Require config file from folder config
+require_once 'config/config.php';
 
-<body>
-    <h1>API working</h1>
-</body>
-
-</html>
+//Instantiate the Core class
+$init = new Core();
