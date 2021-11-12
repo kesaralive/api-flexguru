@@ -26,25 +26,44 @@ class Authentication extends Controller
                     //Take userid
                     $userid = $login->userid($data['username']);
 
-                    //Generate JWT token
+                    //Generate JWT token properties
                     $iat = time();
-                    $exp = time() + 300;
+                    $exp = time() + 60 * 15;
+                    $refreshexp = time() + 60 * 20;
 
                     $session = $this->model("Session");
                     if (!$session->sessionByusername($data['username'])) {
-                        if ($session->create($userid, $iat, $exp)) {
+
+                        //Create Refresh Token Payload
+                        $refreshpayload = array(
+                            'iss' => 'localhost',
+                            'iat' => $iat,
+                            'exp' => $refreshexp
+                        );
+
+                        //Create Refresh Token
+                        $refresh = JWT::encode($refreshpayload, REFRESH_KEY, 'HS512');
+
+                        //Create a Session
+                        if ($session->create($userid, $iat, $exp, $refresh)) {
+
+                            //Create Access Token Payload
                             $payload = array(
                                 'iss' => 'localhost', //issuer
                                 // 'aud' => 'localhost', //audience
                                 'userId' => $userid,
                                 'iat' => $iat, //time JWT was issued
-                                'exp' => $exp //time JWT expires
+                                'exp' => $exp, //time JWT expires
                             );
 
+                            //Create an Access Token
                             $jwt = JWT::encode($payload, SECRET_KEY, 'HS512');
+
                             echo json_encode(array(
                                 'token' => $jwt,
-                                'expires' => $exp
+                                'expires' => $exp,
+                                'refreshToken' => $refresh,
+                                'refreshExpires' => $refreshexp
                             ));
                         }
                     } else {

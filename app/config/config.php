@@ -17,3 +17,4 @@ define('SITENAME', 'Api-Flexguru');
 
 //Secret key
 define('SECRET_KEY', 'Abc123');
+define('REFRESH_KEY', 'ADs121');

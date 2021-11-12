@@ -13,13 +13,14 @@ class Session
     private $tutor = 0;
     private $affiliate = 0;
     private $student = 1;
+    private $refToken;
 
     public function __construct()
     {
         $this->db = new Database;
     }
 
-    public function create($userid, $iat, $exp)
+    public function create($userid, $iat, $exp, $refreshToken)
     {
         $this->username = $this->db->findUserByid($userid)[0]['username'];
         $this->id = $userid;
@@ -36,9 +37,10 @@ class Session
             default:
                 break;
         }
+        $this->refToken = $refreshToken;
 
         //Create query
-        $this->db->query("INSERT INTO " . $this->table . "(id,username,created,expires,admin,tutor,affiliate,student) VALUES(:id,:username,:created,:expires,:admin,:tutor,:affiliate,:student)");
+        $this->db->query("INSERT INTO " . $this->table . "(id,username,created,expires,admin,tutor,affiliate,student,refreshToken) VALUES(:id,:username,:created,:expires,:admin,:tutor,:affiliate,:student,:refToken)");
 
         //Bind data
         $this->db->bind(':id', $this->id);
@@ -49,6 +51,7 @@ class Session
         $this->db->bind(':tutor', $this->tutor);
         $this->db->bind(':affiliate', $this->affiliate);
         $this->db->bind(':student', $this->student);
+        $this->db->bind(':refToken', $this->refToken);
 
         if ($this->db->execute()) {
             return true;
