@@ -6,7 +6,6 @@ class Users extends Controller
     {
     }
 
-
     public function read()
     {
         $user = $this->model("User");

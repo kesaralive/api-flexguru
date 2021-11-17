@@ -60,6 +60,48 @@ class Session
         }
     }
 
+    public function destroy($token)
+    {
+        //Create query
+        $this->db->query("DELETE FROM " . $this->table . "
+        WHERE refreshToken = :refreshToken");
+        //Bind data
+        $this->db->bind(':refreshToken', $token);
+        $this->db->execute();
+    }
+
+    public function destroyByUsername($username)
+    {
+        //Create query
+        $this->db->query("DELETE FROM " . $this->table . "
+        WHERE username = :username");
+        //Bind data
+        $this->db->bind(':username', $username);
+        $this->db->execute();
+    }
+
+    public function update($userid, $update_array)
+    {
+        //Create query
+        $this->db->query("UPDATE " . $this->table . " SET created = :created, expires = :expires, refreshToken = :refreshToken, accessToken = :accessToken where id = :userid");
+        //Bind data
+        $this->db->bind(':userid', $userid);
+        $this->created = date('Y-m-d H:i:s', $update_array['created']);
+        $this->expires = date('Y-m-d H:i:s', $update_array['expires']);
+
+        $this->db->bind(':created', $this->created);
+        $this->db->bind(':expires', $this->expires);
+
+        $this->db->bind(':refreshToken', $update_array['refreshToken']);
+        $this->db->bind(':accessToken', $update_array['accessToken']);
+
+        if ($this->db->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function sessionByusername($username)
     {
         //Create query
@@ -77,6 +119,19 @@ class Session
         }
     }
 
+    public function getRefreshToken($username)
+    {
+        //Create query
+        $this->db->query("SELECT refreshToken from " . $this->table . " where username = :username");
+
+        //Bind data
+        $this->db->bind(':username', $username);
+
+        $this->db->execute();
+
+        return $this->db->resultSet()[0]['refreshToken'];
+    }
+
     public function sessionByuserid($userid)
     {
         //Create query
@@ -89,6 +144,37 @@ class Session
 
         if ($this->db->rowCount() > 0) {
             return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function setAccess($userid, $token)
+    {
+        //Create query
+        $this->db->query("UPDATE " . $this->table . " SET accessToken = :accessToken where id = :userid");
+
+        //Bind data
+        $this->db->bind(':userid', $userid);
+        $this->db->bind(':accessToken', $token);
+
+        $this->db->execute();
+    }
+
+    public function Accesscheck($userid, $refreshToken)
+    {
+        //Create query
+        $this->db->query("SELECT accessToken from " . $this->table . " where id = :userid and refreshToken = :refreshToken");
+
+        //Bind data
+        $this->db->bind(':userid', $userid);
+        $this->db->bind(':refreshToken', $refreshToken);
+
+        $this->db->execute();
+
+        if ($this->db->rowCount() > 0) {
+            return $this->db->resultSet();
         } else {
             return false;
         }
