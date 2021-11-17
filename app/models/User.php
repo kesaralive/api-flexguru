@@ -28,4 +28,13 @@ class User
         $this->db->query('SELECT * from ' . $this->table);
         return $this->db->resultSet();
     }
+
+    public function getUser($userid)
+    {
+        //Create query 
+        $this->db->query('SELECT `username`,`firstname`,`lastname`,`email`,`startdate`,`phoneno`,`city`,`role`,`photourl`,`dob`,`subscription`,`gender` from ' . $this->table);
+        //Bind data
+        //Return result set
+        return $this->db->resultSet();
+    }
 }

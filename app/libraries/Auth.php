@@ -13,7 +13,7 @@ class Auth
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($_SERVER['CONTENT_TYPE'] !== 'application/json') {
-                echo json_encode(array('message' => 'Request content type is not valid.'));
+                echo json_encode(array('message' => 'Request content type is not valids.'));
                 exit;
             }
         }
@@ -60,6 +60,8 @@ class Auth
             return $e->getMessage();
         }
     }
+
+
     /**
      * Get hearder Authorization
      * */

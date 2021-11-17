@@ -6,13 +6,12 @@ class Users extends Controller
     {
     }
 
-
     public function read()
     {
         $user = $this->model("User");
         $auth = new Auth;
         $session_array = $auth->authorized()[0];
-        if ($session_array['student']) {
+        if (isset($session_array['student']) && $session_array['student']) {
             if ($result = $user->read()) {
                 $users_arr = array();
                 $users_arr['data'] = array();
