@@ -15,7 +15,6 @@ class Registration extends Controller
         if ($_SERVER['REQUEST_METHOD'] = "POST") {
             $data = json_decode(file_get_contents("php://input"), true);
             if ($validate->validate($data)) {
-                print_r('ss');
                 $this->register->register($data);
                 json_encode(array('message' => "User created successfully"));
             } else {

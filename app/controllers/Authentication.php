@@ -14,6 +14,7 @@ class Authentication extends Controller
 
     private function sendCredentials($username)
     {
+
         $login = $this->model("Login");
         $session = $this->model("Session");
 
@@ -46,14 +47,12 @@ class Authentication extends Controller
                 'userId' => $userid,
                 'iat' => $iat, //time JWT was issued
                 'exp' => $exp //time JWT expires
-
             );
 
             //Create an Access Token
             $jwt = JWT::encode($payload, SECRET_KEY, 'HS512');
 
             $session->setAccess($userid, $jwt);
-
 
             $user = $this->model("User");
             $data = $user->getUser($userid);
@@ -87,24 +86,36 @@ class Authentication extends Controller
                         $refreshToken = $session->getRefreshToken($data['username']);
                         try {
                             $apayload = JWT::decode($refreshToken, REFRESH_KEY, ['HS512']);
-                            echo json_encode(array('message' => 'duplicate logins not allowed'));
+                            echo json_encode(array('message' => 'duplicate logins not allowed', 'status' => false));
                         } catch (Exception $e) {
                             if ($e->getMessage() == 'Expired token') {
                                 $session->destroyByUsername($data['username']);
                                 $this->sendCredentials($data['username']);
                             } else {
-                                echo json_encode(array('message' => 'Contact System Support'));
+                                echo json_encode(array('message' => 'Contact System Support', 'status' => false));
                             }
                         }
                     }
                 } else {
-                    echo json_encode(array('message' => 'incorrect login credentials'));
+                    echo json_encode(array('message' => 'Incorrect login credentials', 'status' => false));
                 }
             } else {
-                echo json_encode(array('message' => 'invalid operation'));
+                echo json_encode(array('message' => 'Invalid operation', 'status' => false));
             }
         }
     }
+
+    public function logout()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $data = json_decode(file_get_contents("php://input"), true);
+            $session = $this->model("Session");
+            $session->destroy($data['refreshToken']);
+            echo json_encode(array('message' => 'Succesfully Logged out.'));
+        }
+    }
+
+
 
 
     public function checktoken()
@@ -158,7 +169,6 @@ class Authentication extends Controller
                     'userId' => $userid,
                     'iat' => $iat, //time JWT was issued
                     'exp' => $exp //time JWT expires
-
                 );
 
                 //Create an Access Token
